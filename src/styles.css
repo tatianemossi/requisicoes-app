@@ -1,0 +1,28 @@
+.bg-light {
+  background-color: #f4eff2 !important;
+ }
+
+ .btn-secondary {
+  background-color: #e850ab7a;
+  border: #e850ab7a;
+ }
+
+ .btn-secondary:hover {
+  background-color: #dd9bc3;
+  border: #dd9bc3;
+ }
+
+ .text-primary {
+  color: #e850ab7a !important;
+ }
+
+ .btn-outline-secondary {
+  border-color: #e850ab7a;
+  color: #e850ab7a;
+ }
+
+ .btn-outline-secondary:hover {
+  background-color: #dd9bc3;
+  border: #dd9bc3;
+  color: #ffff;
+ }
