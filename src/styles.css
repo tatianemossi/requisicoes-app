@@ -1,5 +1,9 @@
-.bg-light {
+.bg-color {
   background-color: #f4eff2 !important;
+ }
+
+ .bg-light {
+  background-color: #edcfe194 !important;
  }
 
  .btn-secondary {
@@ -25,4 +29,13 @@
   background-color: #dd9bc3;
   border: #dd9bc3;
   color: #ffff;
+ }
+
+.links {
+  font-size: 17px;
+ }
+
+ .links :hover {
+  color: #d259a1 !important;
+  transition: .3s ease-in-out;
  }

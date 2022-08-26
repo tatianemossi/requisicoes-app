@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../auth/services/authentication.service';
 
 @Component({
@@ -7,16 +8,23 @@ import { AuthenticationService } from '../auth/services/authentication.service';
   templateUrl: './painel.component.html',
   styleUrls: ['./painel.component.css']
 })
-export class PainelComponent implements OnInit {
+export class PainelComponent implements OnInit, OnDestroy {
   emailUsuario?: string | null;
+
+  // $ = utilizado para se referir a uma Subscription
+  usuarioLogado$: Subscription;
 
   constructor(
     private authService: AuthenticationService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.authService.usuarioLogado
-      .subscribe(usuario => this.emailUsuario = usuario?.email)
+    this.usuarioLogado$ = this.authService.usuarioLogado
+      .subscribe(usuario => this.emailUsuario = usuario?.email);
+  }
+
+  ngOnDestroy(): void {
+    this.usuarioLogado$.unsubscribe();
   }
 
   public sair() {
