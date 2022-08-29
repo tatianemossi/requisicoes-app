@@ -5,8 +5,7 @@ import { AuthenticationService } from '../auth/services/authentication.service';
 
 @Component({
   selector: 'app-painel',
-  templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.css']
+  templateUrl: './painel.component.html'
 })
 export class PainelComponent implements OnInit, OnDestroy {
   emailUsuario?: string | null;

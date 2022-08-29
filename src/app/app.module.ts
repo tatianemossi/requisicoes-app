@@ -14,6 +14,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DepartamentoModule } from './departamentos/departamento.module';
+import { FuncionarioModule } from './funcionarios/funcionario.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { DepartamentoModule } from './departamentos/departamento.module';
     PainelComponent,
     NavbarComponent
   ],
-  imports: [
+  imports: [  
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -31,7 +32,8 @@ import { DepartamentoModule } from './departamentos/departamento.module';
     AngularFireAuthModule,
     AngularFirestoreModule,
 
-    DepartamentoModule
+    DepartamentoModule,
+    FuncionarioModule
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]

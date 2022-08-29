@@ -6,8 +6,7 @@ import { AuthenticationService } from '../auth/services/authentication.service';
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  templateUrl: './navbar.component.html'
 })
 export class NavbarComponent implements OnInit {
   public usuarioLogado: Observable<firebase.User | null>;

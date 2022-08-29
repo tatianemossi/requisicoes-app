@@ -13,7 +13,6 @@ export class DepartamentoComponent implements OnInit {
   public departamentos$: Observable<Departamento[]>;
   public form: FormGroup;
 
-
   constructor(
     private departamentoService: DepartamentoService,
     private modalService: NgbModal,
