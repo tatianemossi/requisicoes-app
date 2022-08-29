@@ -30,8 +30,8 @@
           </thead>
           <tbody class="text-center">
             <tr *ngFor="let departamento of (departamentos$) | async">
-              <td>{{ departamento.nome}}</td>
-              <td>{{ departamento.telefone}}</td>
+              <td>{{ departamento.nome }}</td>
+              <td>{{ departamento.telefone }}</td>
               <td class="d-grid d-md-block">
                 <button
                   (click)="gravar(modal, departamento)"

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,12 @@ import { LoginComponent } from './auth/login/login.component';
 import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DepartamentoModule } from './departamentos/departamento.module';
-import { FuncionarioModule } from './funcionarios/funcionario.module';
+import { EquipamentoModule } from './equipamentos/equipamento.module';
+
+import ptBr from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(ptBr);
 
 @NgModule({
   declarations: [
@@ -23,7 +28,7 @@ import { FuncionarioModule } from './funcionarios/funcionario.module';
     PainelComponent,
     NavbarComponent
   ],
-  imports: [  
+  imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -33,9 +38,9 @@ import { FuncionarioModule } from './funcionarios/funcionario.module';
     AngularFirestoreModule,
 
     DepartamentoModule,
-    FuncionarioModule
+    EquipamentoModule
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, { provide: LOCALE_ID, useValue: 'pt'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

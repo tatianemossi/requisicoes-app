@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FuncionarioRoutingModule } from './funcionario-routing.module';
-import { FuncionarioComponent } from './funcionario.component';
+import { EquipamentoRoutingModule } from './equipamento-routing.module';
+import { EquipamentoComponent } from './equipamento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { NgxCurrencyModule} from 'ngx-currency'
 
 
 @NgModule({
   declarations: [
-    FuncionarioComponent
+    EquipamentoComponent
   ],
   imports: [
     CommonModule,
     NgbModule,
     ReactiveFormsModule,
-    FuncionarioRoutingModule,
+    EquipamentoRoutingModule,
+    NgxCurrencyModule
   ]
 })
-export class FuncionarioModule { }
+export class EquipamentoModule { }

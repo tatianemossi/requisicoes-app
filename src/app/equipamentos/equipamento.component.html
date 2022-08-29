@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 col-md-10 col-lg-9 mx-auto">
       <div class="text-center text-md-start">
-        <h1 class="fw-bold text-primary mt-5">Funcionários</h1>
+        <h1 class="fw-bold text-primary mt-5">Equipamentos</h1>
       </div>
 
       <div class="d-grid gap-2 d-md-block mt-4">
@@ -23,28 +23,29 @@
         <table class="table table-light table-striped table-hover">
           <thead class="thead-dark text-center">
             <tr>
+              <th>Nº de Série</th>
               <th>Nome</th>
-              <th>Função</th>
-              <th>Email</th>
-              <th>Departamento</th>
+              <th>Preço</th>
+              <th>Data de Fabricação</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody class="text-center">
-            <tr *ngFor="let funcionario of (funcionarios$) | async">
-              <td>{{ funcionario.nome}}</td>
-              <td>{{ funcionario.funcao}}</td>
-              <td>{{ funcionario.email}}</td>
-              <td>{{ funcionario.departamento}}</td>
+            <tr *ngFor="let equipamento of (equipamentos$) | async">
+              <td>{{ equipamento.numeroSerie }}</td>
+              <td>{{ equipamento.nome }}</td>
+              <td>{{equipamento.preco | currency:'BRL' }}</td>
+              <td>{{ equipamento.dataFabricacao | date: 'dd/MM/yyyy'}}</td>
               <td class="d-grid d-md-block">
                 <button
-                  (click)="gravar(modal, funcionario)"
+                  (click)="gravar(modal, equipamento)"
                   type="button"
                   class="btn btn-secondary me-0 me-md-1 mb-1 mb-md-auto">
                   <i class="pi pi-user-edit"></i>
                 </button>
 
-                <button (click)="excluir(funcionario)"
+                <button
+                  (click)="excluir(equipamento)"
                   type="button"
                   class="btn btn-outline-danger">
                   <i class="pi pi-trash"></i>
@@ -60,32 +61,31 @@
 
 <ng-template #modal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{tituloModal}} de Funcionários</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{tituloModal}} de Equipamentos</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('fechar')"></button>
   </div>
-  <form (ngSubmit)="modal.close('gravar')">
+  <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
       <div class="form-group mb-3">
-        <label for="nome" class="form-label">Nome do Funcionário</label>
-        <input formControlName="nome" class="form-control" type="text" placeholder="Digite o nome do Funcionário">
+        <label for="numeroSerie" class="form-label">Nº de Série do Equipamento</label>
+        <input formControlName="numeroSerie" class="form-control" type="text" placeholder="Digite o Nº de Srie do seu Equipamento">
       </div>
 
       <div class="form-group mb-3">
-        <label for="funcao" class="form-label">Função do Funcionário</label>
-        <input formControlName="funcao" class="form-control" type="text"
-          placeholder="Digite a função do Funcionário">
+        <label for="nome" class="form-label">Nome do Equipamento</label>
+        <input formControlName="nome" class="form-control" type="text" placeholder="Digite o nome do seu Departamento">
       </div>
 
       <div class="form-group mb-3">
-        <label for="email" class="form-label">Email do Funcionário</label>
-        <input formControlName="email" class="form-control" type="text"
-          placeholder="Digite o email do Funcionário">
+        <label for="preco" class="form-label">Preço do Equipamento</label>
+        <input formControlName="preco" class="form-control" type="text"
+          placeholder="Digite o preço do seu Equipamento" currencyMask [options]="{ prefix: 'R$', thousands: '.', decimal: ',', align: 'left' }">
       </div>
 
       <div class="form-group mb-3">
-        <label for="departamento" class="form-label">Departamento do Funcionário</label>
-        <input formControlName="departamento" class="form-control" type="text"
-          placeholder="Digite o departamento do Funcionário">
+        <label for="dataFabricacao" class="form-label">Data de Fabricação do Equipamento</label>
+        <input formControlName="dataFabricacao" class="form-control" type="date"
+          placeholder="Digite a Data de Fabricação do seu Equipamento" mask="00/00/0000" max="current_date">
       </div>
 
     </div>

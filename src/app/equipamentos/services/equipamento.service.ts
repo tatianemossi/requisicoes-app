@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
-import { Funcionario } from '../models/funcionario.model';
+import { Equipamento } from '../models/equipamento.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FuncionarioService {
-
-  private registros: AngularFirestoreCollection<Funcionario>;
+export class EquipamentoService {
+  private registros: AngularFirestoreCollection<Equipamento>;
 
   constructor(private firestore: AngularFirestore) {
-    this.registros = this.firestore.collection<Funcionario>("funcionarios");
+    this.registros = this.firestore.collection<Equipamento>("equipamentos")
   }
 
-  public async inserir(registro: Funcionario): Promise<any> {
+  public async inserir(registro: Equipamento): Promise<any> {
     if (!registro)
       return Promise.reject("Item inválido");
 
@@ -25,15 +24,15 @@ export class FuncionarioService {
     this.registros.doc(res.id).set(registro);
   }
 
-  public async editar(registro: Funcionario): Promise<void> {
+  public async editar(registro: Equipamento): Promise<void> {
     return this.registros.doc(registro.id).set(registro);
   }
 
-  public excluir(registro: Funcionario): Promise<void> {
+  public excluir(registro: Equipamento): Promise<void> {
     return this.registros.doc(registro.id).delete();
   }
 
-  public selecionarTodos(): Observable<Funcionario[]> {
+  public selecionarTodos(): Observable<Equipamento[]> {
     return this.registros.valueChanges();
   }
 }
