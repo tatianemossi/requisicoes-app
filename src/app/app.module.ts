@@ -41,9 +41,7 @@ registerLocaleData(ptBr);
 
     BrowserAnimationsModule,
     ToastrModule.forRoot({
-      timeOut: 2000,
-      progressBar: true,
-      progressAnimation: 'increasing'
+      timeOut: 2000
     }),
 
     DepartamentoModule,
