@@ -4,4 +4,4 @@ export class Equipamento {
   nome: string;
   preco: string;
   dataFabricacao: Date;
- }
+}

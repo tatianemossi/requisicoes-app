@@ -12,6 +12,7 @@ import { EquipamentoService } from './services/equipamento.service';
 export class EquipamentoComponent implements OnInit {
   public equipamentos$: Observable<Equipamento[]>;
   public form: FormGroup;
+  public dataFabricacaoMax: Date;
 
   constructor(
     private equipamentoService: EquipamentoService,
@@ -19,6 +20,7 @@ export class EquipamentoComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.dataFabricacaoMax = new Date;
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
 
     this.form = this.fb.group({

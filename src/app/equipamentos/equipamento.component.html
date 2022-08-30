@@ -84,8 +84,8 @@
 
       <div class="form-group mb-3">
         <label for="dataFabricacao" class="form-label">Data de Fabricação do Equipamento</label>
-        <input formControlName="dataFabricacao" class="form-control" type="date"
-          placeholder="Digite a Data de Fabricação do seu Equipamento" mask="00/00/0000" max="current_date">
+        <input formControlName="dataFabricacao" class="form-control" type="date" max="{{dataFabricacaoMax | date:'yyyy-MM-dd'}}"
+          placeholder="Digite a Data de Fabricação do seu Equipamento">
       </div>
 
     </div>
