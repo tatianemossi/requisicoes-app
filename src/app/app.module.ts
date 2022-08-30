@@ -8,7 +8,9 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth'
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore'
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './auth/services/authentication.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { PainelComponent } from './painel/painel.component';
@@ -36,6 +38,13 @@ registerLocaleData(ptBr);
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      progressBar: true,
+      progressAnimation: 'increasing'
+    }),
 
     DepartamentoModule,
     EquipamentoModule
