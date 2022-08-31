@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -41,13 +41,17 @@ registerLocaleData(ptBr);
 
     BrowserAnimationsModule,
     ToastrModule.forRoot({
-      timeOut: 2000
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right'
     }),
 
     DepartamentoModule,
     EquipamentoModule
   ],
-  providers: [AuthenticationService, { provide: LOCALE_ID, useValue: 'pt'}],
+  providers: [
+    AuthenticationService,
+    { provide: LOCALE_ID, useValue: "pt" },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: "BRL"}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

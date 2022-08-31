@@ -35,7 +35,7 @@ export class EquipamentoComponent implements OnInit {
   }
 
   get tituloModal(): string {
-    return this.id?.value ? "Atualização" : "Cadastro"
+    return this.id?.value ? "Atualização" : "Cadastro";
   }
 
   get id() {
@@ -67,25 +67,28 @@ export class EquipamentoComponent implements OnInit {
     try {
       await this.modalService.open(modal).result;
 
-      if (!equipamento){
+      if (!equipamento) {
         await this.equipamentoService.inserir(this.form.value);
-        this.showToastr('Equipamento inserido!');
+        this.toastr.success('Equipamento inserido!', 'Cadastro de Equipamentos');
       }
-        else {
+      else {
         await this.equipamentoService.editar(this.form.value);
-        this.showToastr('Equipamento editado!');
+        this.toastr.success('Equipamento editado!', 'Cadastro de Equipamentos');
       }
 
-    } catch (_error) {
+    } catch (error) {
+      if (error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Houve um erro ao salvar o equipamento!', 'Cadastro de Equipamentos');
     }
   }
 
   public excluir(equipamento: Equipamento) {
-    this.equipamentoService.excluir(equipamento);
-    this.showToastr('Equipamento excluído!');
-  }
-
-  showToastr(mensagem: string) {
-    this.toastr.success(mensagem, 'Sucesso!');
+    try {
+      this.equipamentoService.excluir(equipamento);
+      this.toastr.success('Equipamento excluído!', 'Cadastro de Equipamentos');
+    } catch (error) {
+      if (error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Houve um erro ao excluir o equipamento!', 'Cadastro de Equipamentos');
+    }
   }
 }

@@ -55,23 +55,27 @@ export class DepartamentoComponent implements OnInit {
     try {
       await this.modalService.open(modal).result;
 
-      if (!departamento){
+      if (!departamento) {
         await this.departamentoService.inserir(this.form.value);
-        this.showToastr('Departamento inserido!');
+        this.toastr.success('Departamento inserido!', 'Cadastro de Departamentos');
       }
       else {
         await this.departamentoService.editar(this.form.value);
-        this.showToastr('Departamnento editado!');
+        this.toastr.success('Departamnento editado!', 'Cadastro de Departamentos');
       }
-    } catch (_error) {}
+    } catch (error) {
+      if (error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Houve um erro ao salvar o departamento!', 'Cadastro de Departamentos')
+    }
   }
 
   public excluir(departamento: Departamento) {
-    this.departamentoService.excluir(departamento);
-    this.showToastr('Departamento excluído!');
-  }
-
-  showToastr(mensagem: string) {
-    this.toastr.success(mensagem, 'Sucesso!');
+    try {
+      this.departamentoService.excluir(departamento);
+      this.toastr.success('Departamento excluído!', 'Cadastro de Departamentos');
+    } catch (error) {
+      if (error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Houve um erro ao excluir departamento!', 'Cadastro de Departamentos')
+    }
   }
 }
