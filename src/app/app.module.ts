@@ -20,6 +20,7 @@ import { EquipamentoModule } from './equipamentos/equipamento.module';
 
 import ptBr from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { FuncionarioModule } from './funcionarios/funcionario.module';
 
 registerLocaleData(ptBr);
 
@@ -46,7 +47,8 @@ registerLocaleData(ptBr);
     }),
 
     DepartamentoModule,
-    EquipamentoModule
+    EquipamentoModule,
+    FuncionarioModule
   ],
   providers: [
     AuthenticationService,
