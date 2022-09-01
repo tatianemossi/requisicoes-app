@@ -15,12 +15,9 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { DepartamentoModule } from './departamentos/departamento.module';
-import { EquipamentoModule } from './equipamentos/equipamento.module';
 
 import ptBr from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-import { FuncionarioModule } from './funcionarios/funcionario.module';
 
 registerLocaleData(ptBr);
 
@@ -44,11 +41,7 @@ registerLocaleData(ptBr);
     ToastrModule.forRoot({
       timeOut: 2000,
       positionClass: 'toast-bottom-right'
-    }),
-
-    DepartamentoModule,
-    EquipamentoModule,
-    FuncionarioModule
+    })
   ],
   providers: [
     AuthenticationService,

@@ -69,8 +69,16 @@ export class FuncionarioComponent implements OnInit {
   public async gravar(modal: TemplateRef<any>, funcionario?: Funcionario) {
     this.form.reset();
 
-    if (funcionario)
-      this.form.setValue(funcionario);
+    if (funcionario){
+      const departamento = funcionario.departamento ? funcionario.departamento : null;
+
+      const funcionarioCompleto = {
+        ...funcionario,
+        departamento
+      }
+
+      this.form.setValue(funcionarioCompleto);
+    }
 
     try {
       await this.modalService.open(modal).result;
