@@ -127,7 +127,7 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary col-md-3"
         (click)="modal.dismiss('fechar')">Cancelar</button>
-      <button type="submit" class="btn btn-secondary col-md-3">Gravar</button>
+      <button type="submit" class="btn btn-secondary col-md-3" [disabled]="this.form.invalid">Gravar</button>
     </div>
   </form>
 </ng-template>

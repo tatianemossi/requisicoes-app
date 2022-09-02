@@ -69,7 +69,7 @@ export class FuncionarioComponent implements OnInit {
   public async gravar(modal: TemplateRef<any>, funcionario?: Funcionario) {
     this.form.reset();
 
-    if (funcionario){
+    if (funcionario) {
       const departamento = funcionario.departamento ? funcionario.departamento : null;
 
       const funcionarioCompleto = {
@@ -83,14 +83,18 @@ export class FuncionarioComponent implements OnInit {
     try {
       await this.modalService.open(modal).result;
 
-      if (!funcionario) {
-        await this.funcionarioService.inserir(this.form.value);
-        this.toastr.success('Funcionário inserido!', 'Cadastro de Funcionários');
+      if (this.form.dirty && this.form.valid) {
+        if (!funcionario) {
+          await this.funcionarioService.inserir(this.form.value);
+          this.toastr.success('Funcionário inserido!', 'Cadastro de Funcionários');
+        }
+        else {
+          await this.funcionarioService.editar(this.form.value);
+          this.toastr.success('Funcionário editado!', 'Cadastro de Funcionários');
+        }
       }
-      else {
-        await this.funcionarioService.editar(this.form.value);
-        this.toastr.success('Funcionário editado!', 'Cadastro de Funcionários');
-      }
+      else
+        this.toastr.error('O formulário precisa ser preenchido!', 'Cadastro de Funcionários');
 
     } catch (error) {
       if (error != "fechar" && error != "0" && error != "1")
