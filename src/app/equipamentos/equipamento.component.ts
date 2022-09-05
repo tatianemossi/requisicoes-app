@@ -1,10 +1,24 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
+import * as moment from 'moment';
+import 'moment/locale/pt-br';
+
+export function validarData(): ValidatorFn {
+  return (input: AbstractControl): ValidationErrors | null => {
+    const dataEscolhida = moment(input.value);
+    const hoje = moment();
+
+    if (!dataEscolhida)
+      return null;
+
+    return dataEscolhida > hoje ? { invalidDate: true}: null;
+  }
+}
 
 @Component({
   selector: 'app-equipamento',
@@ -27,10 +41,10 @@ export class EquipamentoComponent implements OnInit {
 
     this.form = this.fb.group({
       id: new FormControl(""),
-      numeroSerie: new FormControl(""),
-      nome: new FormControl(""),
-      preco: new FormControl(""),
-      dataFabricacao: new FormControl("")
+      numeroSerie: new FormControl("", [Validators.required, Validators.minLength(3)]),
+      nome: new FormControl("", [Validators.required, Validators.minLength(3)]),
+      preco: new FormControl("", [Validators.required]),
+      dataFabricacao: new FormControl("", [Validators.required, validarData()])
     })
   }
 
