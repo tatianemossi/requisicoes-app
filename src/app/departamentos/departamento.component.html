@@ -61,21 +61,37 @@
   </div>
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
-      <div class="form-group mb-3">
+      <div class="form-group mb-3 position-relative">
         <label for="nome" class="form-label">Nome do Departamento</label>
-        <input formControlName="nome" class="form-control" type="text" placeholder="Digite o nome do seu Departamento">
+        <input formControlName="nome"
+          class="form-control"
+          [ngClass]="(nome?.touched && nome?.invalid) ? 'is-invalid' : ''"
+          type="text"
+          placeholder="Digite o nome do seu Departamento">
+          <div class="invalid-tooltip" *ngIf="nome?.touched && nome?.invalid">
+            <span *ngIf="nome?.errors?.['required']">O nome precisa ser preenchido.</span>
+            <span *ngIf="nome?.errors?.['minlength']">O nome precisa ter no mínimo 3 caracteres.</span>
+          </div>
       </div>
 
-      <div class="form-group mb-3">
+      <div class="form-group mb-3 position-relative">
         <label for="telefone" class="form-label">Telefone do Departamento</label>
-        <input formControlName="telefone" class="form-control" type="text"
-          placeholder="Digite o telefone do seu Departamento">
+        <input formControlName="telefone"
+          class="form-control"
+          [ngClass]="(telefone?.touched && telefone?.invalid) ? 'is-invalid' : ''"
+          type="text"
+          placeholder="Digite o telefone do seu Departamento"
+          mask="(00) 0000-0000||(00) 0 0000-0000">
+          <div class="invalid-tooltip" *ngIf="telefone?.touched && telefone?.invalid">
+            <span *ngIf="telefone?.errors?.['required']">O telefone precisa ser preenchido.</span>
+            <span *ngIf="telefone?.errors?.['pattern']">O telefone está inválido.</span>
+          </div>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary col-md-3"
         (click)="modal.dismiss('fechar')">Cancelar</button>
-      <button type="submit" class="btn btn-secondary col-md-3">Gravar</button>
+      <button type="submit" class="btn btn-secondary col-md-3" [disabled]="this.form.invalid">Gravar</button>
     </div>
   </form>
 </ng-template>

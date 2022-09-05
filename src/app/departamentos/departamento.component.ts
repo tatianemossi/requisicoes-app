@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
@@ -25,8 +25,8 @@ export class DepartamentoComponent implements OnInit {
 
     this.form = this.fb.group({
       id: new FormControl(""),
-      nome: new FormControl(""),
-      telefone: new FormControl("")
+      nome: new FormControl("", [Validators.required, Validators.minLength(3)]),
+      telefone: new FormControl("", [Validators.required, Validators.pattern("^[1-9]{2}[0-9]{4,5}[0-9]{4}$")])
     })
   }
 
@@ -55,14 +55,19 @@ export class DepartamentoComponent implements OnInit {
     try {
       await this.modalService.open(modal).result;
 
-      if (!departamento) {
-        await this.departamentoService.inserir(this.form.value);
-        this.toastr.success('Departamento inserido!', 'Cadastro de Departamentos');
+      if (this.form.dirty && this.form.valid) {
+        if (!departamento) {
+          await this.departamentoService.inserir(this.form.value);
+          this.toastr.success('Departamento inserido!', 'Cadastro de Departamentos');
+        }
+        else {
+          await this.departamentoService.editar(this.form.value);
+          this.toastr.success('Departamnento editado!', 'Cadastro de Departamentos');
+        }
       }
-      else {
-        await this.departamentoService.editar(this.form.value);
-        this.toastr.success('Departamnento editado!', 'Cadastro de Departamentos');
-      }
+      else
+        this.toastr.error('O formulário precisa ser preenchido!', 'Cadastro de Departamentos');
+
     } catch (error) {
       if (error != "fechar" && error != "0" && error != "1")
         this.toastr.error('Houve um erro ao salvar o departamento!', 'Cadastro de Departamentos')

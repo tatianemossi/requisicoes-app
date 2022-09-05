@@ -5,7 +5,10 @@ import { DepartamentoRoutingModule } from './departamento-routing.module';
 import { DepartamentoComponent } from './departamento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
+const maskConfig: Partial<IConfig> = {
+  validation: false };
 
 @NgModule({
   declarations: [
@@ -15,7 +18,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     NgbModule,
     ReactiveFormsModule,
-    DepartamentoRoutingModule
+    DepartamentoRoutingModule,
+    NgxMaskModule.forRoot(maskConfig)
   ]
 })
 export class DepartamentoModule { }
