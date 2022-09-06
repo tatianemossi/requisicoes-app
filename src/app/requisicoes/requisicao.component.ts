@@ -3,11 +3,13 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors,
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AuthenticationService } from '../auth/services/authentication.service';
 import { Departamento } from '../departamentos/models/departamento.model';
 import { DepartamentoService } from '../departamentos/services/departamento.service';
 import { Equipamento } from '../equipamentos/models/equipamento.model';
 import { EquipamentoService } from '../equipamentos/services/equipamento.service';
+import { Funcionario } from '../funcionarios/models/funcionario.model';
 import { Requisicao } from './models/requisicao.model';
 import { RequisicaoService } from './services/requisicao.service';
 
@@ -20,9 +22,12 @@ export class RequisicaoComponent implements OnInit {
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
   public form: FormGroup;
+  emailUsuario?: string | null;
+  usuarioLogado$: Subscription;
 
   constructor(
     private toastr: ToastrService,
+    private authService: AuthenticationService,
     private requisicaoService: RequisicaoService,
     private departamentoService: DepartamentoService,
     private equipamentoService: EquipamentoService,
@@ -30,6 +35,9 @@ export class RequisicaoComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.usuarioLogado$ = this.authService.usuarioLogado
+      .subscribe(usuario => this.emailUsuario = usuario?.email);
+
     this.form = this.fb.group({
       requisicao: new FormGroup({
         id: new FormControl(""),
