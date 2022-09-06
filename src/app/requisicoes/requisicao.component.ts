@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Departamento } from '../departamentos/models/departamento.model';
@@ -32,7 +33,7 @@ export class RequisicaoComponent implements OnInit {
     this.form = this.fb.group({
       requisicao: new FormGroup({
         id: new FormControl(""),
-        dataAbertura: new FormControl(""),
+        dataAbertura: new FormControl(moment()),
         departamentoId: new FormControl("", [Validators.required]),
         departamento: new FormControl(""),
         descricao: new FormControl("", [Validators.required, Validators.minLength(10)]),
@@ -76,12 +77,14 @@ export class RequisicaoComponent implements OnInit {
 
     if (requisicao) {
       const departamento = requisicao.departamento ? requisicao.departamento : null;
+      const equipamento = requisicao.equipamento ? requisicao.departamento : null;
 
       const requisicaoCompleta = {
         ...requisicao,
-        departamento
+        departamento,
+        equipamento
       }
-
+      this.dataAbertura?.setValue(moment());
       this.form.get("requisicao")?.setValue(requisicaoCompleta);
     }
 
