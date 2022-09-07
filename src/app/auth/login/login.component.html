@@ -36,7 +36,7 @@
             <a role="button" class="text-primary text-decoration-none" (click)="abrirModalRecuperacao(content)">Esqueceu sua senha?</a>
 
             <div class="d-grid mx-4 gap-2 mt-3">
-              <button type="submit" class="btn btn-secondary">
+              <button type="submit" class="btn btn-secondary" [disabled]="this.form.invalid">
                 <i class="pi pi-sign-in me-2"></i>Login
               </button>
             </div>

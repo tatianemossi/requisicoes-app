@@ -46,12 +46,13 @@ export class LoginComponent implements OnInit {
     const senha = this.senha?.value;
 
     try {
-      const resposta = await this.authService.login(email, senha);
+      if (this.form.dirty && this.form.valid) {
+        const resposta = await this.authService.login(email, senha);
 
-      if (resposta?.user) {
-        this.router.navigate(["/painel"])
+        if (resposta?.user) {
+          this.router.navigate(["/painel"])
+        }
       }
-
     } catch (error) {
       console.log(error)
     }
