@@ -3,13 +3,14 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors,
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription } from 'rxjs';
+import { filter, map, Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../auth/services/authentication.service';
 import { Departamento } from '../departamentos/models/departamento.model';
 import { DepartamentoService } from '../departamentos/services/departamento.service';
 import { Equipamento } from '../equipamentos/models/equipamento.model';
 import { EquipamentoService } from '../equipamentos/services/equipamento.service';
 import { Funcionario } from '../funcionarios/models/funcionario.model';
+import { FuncionarioService } from '../funcionarios/services/funcionario.service';
 import { Requisicao } from './models/requisicao.model';
 import { RequisicaoService } from './services/requisicao.service';
 
@@ -21,9 +22,10 @@ export class RequisicaoComponent implements OnInit {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
-  public form: FormGroup;
+  funcionarioLogado: Funcionario;
   emailUsuario?: string | null;
   usuarioLogado$: Subscription;
+  public form: FormGroup;
 
   constructor(
     private toastr: ToastrService,
@@ -31,12 +33,18 @@ export class RequisicaoComponent implements OnInit {
     private requisicaoService: RequisicaoService,
     private departamentoService: DepartamentoService,
     private equipamentoService: EquipamentoService,
+    private funcionarioService: FuncionarioService,
     private modalService: NgbModal,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+
     this.usuarioLogado$ = this.authService.usuarioLogado
-      .subscribe(usuario => this.emailUsuario = usuario?.email);
+      .subscribe(usuario => {
+        this.emailUsuario = usuario?.email;
+        this.obterFuncionaLogado(usuario?.email);
+        this.requisicoes$ = this.requisicoes$.pipe(map(req => req.filter(r => r.funcionarioId === this.funcionarioLogado.id)));
+      });
 
     this.form = this.fb.group({
       requisicao: new FormGroup({
@@ -46,7 +54,9 @@ export class RequisicaoComponent implements OnInit {
         departamento: new FormControl(""),
         descricao: new FormControl("", [Validators.required, Validators.minLength(10)]),
         equipamentoId: new FormControl(""),
-        equipamento: new FormControl("")
+        equipamento: new FormControl(""),
+        funcionarioId: new FormControl(""),
+        funcionario: new FormControl("")
       })
     });
 
@@ -79,20 +89,24 @@ export class RequisicaoComponent implements OnInit {
     return this.form.get("requisicao.equipamentoId")
   }
 
+  get funcionarioId() {
+    return this.form.get("requisicao.funcionarioId")
+  }
 
   public async gravar(modal: TemplateRef<any>, requisicao?: Requisicao) {
     this.form.reset();
 
     if (requisicao) {
       const departamento = requisicao.departamento ? requisicao.departamento : null;
-      const equipamento = requisicao.equipamento ? requisicao.departamento : null;
+      const equipamento = requisicao.equipamento ? requisicao.equipamento : null;
+      const funcionario = requisicao.funcionario ? requisicao.funcionario : null;
 
       const requisicaoCompleta = {
         ...requisicao,
         departamento,
-        equipamento
+        equipamento,
+        funcionario
       }
-      this.dataAbertura?.setValue(moment());
       this.form.get("requisicao")?.setValue(requisicaoCompleta);
     }
 
@@ -101,7 +115,7 @@ export class RequisicaoComponent implements OnInit {
 
       if (this.form.dirty && this.form.valid) {
         if (!requisicao) {
-
+          this.form.get("requisicao.funcionarioId")?.setValue(this.funcionarioLogado.id);
           await this.requisicaoService.inserir(this.form.get("requisicao")?.value);
           this.toastr.success('Requisição inserida!', 'Cadastro de Requisições');
         }
@@ -129,4 +143,10 @@ export class RequisicaoComponent implements OnInit {
     }
   }
 
+  public obterFuncionaLogado(emailUsuario: string | null | undefined) {
+    this.funcionarioService.selecionarFuncionarioLogado(emailUsuario)
+      .subscribe(funcionario => {
+        this.funcionarioLogado = funcionario;
+      })
+  }
 }
