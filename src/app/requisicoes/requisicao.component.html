@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 col-md-10 col-lg-9 mx-auto">
       <div class="text-center text-md-start">
-        <h1 class="fw-bold text-primary mt-5">Requisições</h1>
+        <h1 class="fw-bold text-primary mt-5">Minhas Requisições</h1>
       </div>
 
       <div class="d-grid gap-2 d-md-block mt-4">
@@ -18,8 +18,6 @@
           routerLink="/painel">
           <i class="pi pi-sign-out me-2"></i>Voltar
         </button>
-
-        <label for="funcionario" class="fs-5 m-lg-4 mt-4 text-secondary">Funcionário logado: {{emailUsuario}}</label>
       </div>
       <div class="mt-4">
         <table class="table table-light table-striped table-hover">
@@ -34,10 +32,10 @@
           </thead>
           <tbody class="text-center">
             <tr *ngFor="let requisicao of (requisicoes$) | async">
-              <td>{{ requisicao.dataAbertura }}</td>
+              <td>{{ requisicao.dataAbertura.toDate() | date: 'dd/MM/yyyy HH:mm' }}</td>
               <td>{{ requisicao.departamento?.nome }}</td>
               <td>{{ requisicao.descricao }}</td>
-              <td>{{requisicao.equipamento?.nome }}</td>
+              <td>{{ requisicao.equipamento ? requisicao.equipamento.nome : "Não Selecionado" }}</td>
               <td class="d-grid d-md-block">
                 <button
                   (click)="gravar(modal, requisicao)"
@@ -74,8 +72,8 @@
         <div class="form-group mb-3 position-relative">
           <label for="departamentoId" class="form-label">Departamento</label>
           <ng-select formControlName="departamentoId"
-          placeholder="Selecione um departamento"
-          [ngClass]="(departamentoId?.touched && departamentoId?.invalid) ? 'is-invalid' :''"
+            placeholder="Selecione um departamento"
+            [ngClass]="(departamentoId?.touched && departamentoId?.invalid) ? 'is-invalid' :''"
             [clearable]="false"
             [searchable]="false">
             <ng-option
@@ -103,11 +101,10 @@
         </div>
 
         <div class="form-group mb-3 position-relative">
-          <label for="equipamentoId" class="form-label">Equipamento</label>
+          <label for="equipamentoId" class="form-label">Equipamento (opicional)</label>
           <ng-select formControlName="equipamentoId"
           [ngClass]="(equipamentoId?.touched && equipamentoId?.invalid) ? 'is-invalid' :''"
             placeholder="Selecione um equipamento"
-            [clearable]="false"
             [searchable]="false">
             <ng-option
               *ngFor="let equipamento of (equipamentos$ | async)"

@@ -1,9 +1,8 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { filter, map, Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../auth/services/authentication.service';
 import { Departamento } from '../departamentos/models/departamento.model';
 import { DepartamentoService } from '../departamentos/services/departamento.service';
@@ -18,14 +17,13 @@ import { RequisicaoService } from './services/requisicao.service';
   selector: 'app-requisicao',
   templateUrl: './requisicao.component.html'
 })
-export class RequisicaoComponent implements OnInit {
+export class RequisicaoComponent implements OnInit, OnDestroy {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
-  funcionarioLogado: Funcionario;
-  emailUsuario?: string | null;
-  usuarioLogado$: Subscription;
+  public funcionarioLogadoId: string;
   public form: FormGroup;
+  private processoAutenticado$: Subscription;
 
   constructor(
     private toastr: ToastrService,
@@ -37,32 +35,40 @@ export class RequisicaoComponent implements OnInit {
     private modalService: NgbModal,
     private fb: FormBuilder) { }
 
+  ngOnDestroy(): void {
+    this.processoAutenticado$.unsubscribe();
+  }
+
   ngOnInit(): void {
-
-    this.usuarioLogado$ = this.authService.usuarioLogado
-      .subscribe(usuario => {
-        this.emailUsuario = usuario?.email;
-        this.obterFuncionaLogado(usuario?.email);
-        this.requisicoes$ = this.requisicoes$.pipe(map(req => req.filter(r => r.funcionarioId === this.funcionarioLogado.id)));
-      });
-
     this.form = this.fb.group({
       requisicao: new FormGroup({
         id: new FormControl(""),
-        dataAbertura: new FormControl(moment()),
-        departamentoId: new FormControl("", [Validators.required]),
+        dataAbertura: new FormControl(""),
+        descricao: new FormControl(""),
+
+        departamentoId: new FormControl(""),
         departamento: new FormControl(""),
-        descricao: new FormControl("", [Validators.required, Validators.minLength(10)]),
+
         equipamentoId: new FormControl(""),
         equipamento: new FormControl(""),
+
         funcionarioId: new FormControl(""),
         funcionario: new FormControl("")
       })
     });
 
-    this.requisicoes$ = this.requisicaoService.selecionarTodos();
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
+
+    this.authService.usuarioLogado.subscribe(usuario => {
+      const email: string = usuario?.email!;
+
+      this.funcionarioService.selecionarFuncionarioLogado(email)
+        .subscribe(funcionario => {
+          this.funcionarioLogadoId = funcionario.id;
+          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesFuncionarioAtual(this.funcionarioLogadoId);
+        });
+    })
   }
 
   get tituloModal(): string {
@@ -95,6 +101,9 @@ export class RequisicaoComponent implements OnInit {
 
   public async gravar(modal: TemplateRef<any>, requisicao?: Requisicao) {
     this.form.reset();
+    this.form.get("requisicao.dataAbertura")?.setValue(new Date());
+    this.form.get("requisicao.equipamentoId")?.setValue(null);
+    this.form.get("requisicao.funcionarioId")?.setValue(null);
 
     if (requisicao) {
       const departamento = requisicao.departamento ? requisicao.departamento : null;
@@ -115,7 +124,7 @@ export class RequisicaoComponent implements OnInit {
 
       if (this.form.dirty && this.form.valid) {
         if (!requisicao) {
-          this.form.get("requisicao.funcionarioId")?.setValue(this.funcionarioLogado.id);
+          this.form.get("requisicao.funcionarioId")?.setValue(this.funcionarioLogadoId);
           await this.requisicaoService.inserir(this.form.get("requisicao")?.value);
           this.toastr.success('Requisição inserida!', 'Cadastro de Requisições');
         }
@@ -141,12 +150,5 @@ export class RequisicaoComponent implements OnInit {
       if (error != "fechar" && error != "0" && error != "1")
         this.toastr.error('Houve um erro ao excluir a requisição!', 'Cadastro de Requisições');
     }
-  }
-
-  public obterFuncionaLogado(emailUsuario: string | null | undefined) {
-    this.funcionarioService.selecionarFuncionarioLogado(emailUsuario)
-      .subscribe(funcionario => {
-        this.funcionarioLogado = funcionario;
-      })
   }
 }

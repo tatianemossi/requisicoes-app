@@ -34,7 +34,7 @@
             <tr *ngFor="let equipamento of (equipamentos$) | async">
               <td>{{ equipamento.numeroSerie }}</td>
               <td>{{ equipamento.nome }}</td>
-              <td>{{equipamento.preco | currency }}</td>
+              <td>{{ equipamento.preco | currency }}</td>
               <td>{{ equipamento.dataFabricacao | date: 'dd/MM/yyyy'}}</td>
               <td class="d-grid d-md-block">
                 <button

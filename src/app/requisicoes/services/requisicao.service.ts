@@ -1,10 +1,10 @@
 import _default from '@angular/common/locales/pt';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import * as moment from 'moment';
 import { map, Observable } from 'rxjs';
 import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
+import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { Requisicao } from '../models/requisicao.model';
 
 @Injectable({
@@ -24,9 +24,6 @@ export class RequisicaoService {
     const res = await this.registros.add(registro);
 
     registro.id = res.id;
-    moment.locale('pt-br');
-    registro.dataAbertura = moment().calendar();
-
     this.registros.doc(res.id).set(registro);
   }
 
@@ -47,21 +44,33 @@ export class RequisicaoService {
               .collection<Departamento>("departamentos")
               .doc(requisicao.departamentoId)
               .valueChanges()
-              .subscribe(x => requisicao.departamento = x);
-          });
+              .subscribe(d => requisicao.departamento = d);
 
-          return requisicoes;
-        }),
-        map((requisicoes: Requisicao[]) => {
-          requisicoes.forEach(requisicao => {
             this.firestore
-              .collection<Equipamento>("equipamentos")
-              .doc(requisicao.equipamentoId)
+              .collection<Funcionario>("funcionarios")
+              .doc(requisicao.funcionarioId)
               .valueChanges()
-              .subscribe(x => requisicao.equipamento = x);
+              .subscribe(f => requisicao.funcionario = f);
+
+            if (requisicao.equipamentoId) {
+              this.firestore
+                .collection<Equipamento>("equipamentos")
+                .doc(requisicao.equipamentoId)
+                .valueChanges()
+                .subscribe(x => requisicao.equipamento = x);
+            }
           });
 
           return requisicoes;
+        })
+      )
+  }
+
+  public selecionarRequisicoesFuncionarioAtual(id: string) {
+    return this.selecionarTodos()
+      .pipe(
+        map(requisicoes => {
+          return requisicoes.filter(requisicao => requisicao.funcionarioId === id);
         })
       )
   }
