@@ -16,6 +16,11 @@
   border: #dd9bc3;
  }
 
+ .btn-secondary:focus {
+  background-color: #dd9bc3;
+  border: #dd9bc3;
+ }
+
  .text-primary {
   color: #e850ab7a !important;
  }
@@ -29,6 +34,11 @@
   background-color: #dd9bc3;
   border: #dd9bc3;
   color: #ffff;
+ }
+
+ .btn-outline-secondary:focus {
+  background-color: #dd9bc3;
+  border: #dd9bc3;
  }
 
 .links {
