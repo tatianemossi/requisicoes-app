@@ -66,11 +66,20 @@ export class RequisicaoService {
       )
   }
 
-  public selecionarRequisicoesFuncionarioAtual(id: string) {
+  public selecionarRequisicoesPeloFuncionarioAtual(funcionarioId: string) {
     return this.selecionarTodos()
       .pipe(
         map(requisicoes => {
-          return requisicoes.filter(requisicao => requisicao.funcionarioId === id);
+          return requisicoes.filter(requisicao => requisicao.funcionarioId === funcionarioId);
+        })
+      )
+  }
+
+  selecionarRequisicoesPeloDepartamento(departamentoId: string): Observable<Requisicao[]> {
+    return this.selecionarTodos()
+      .pipe(
+        map(requisicoes => {
+          return requisicoes.filter(requisicao => requisicao.departamentoId === departamentoId);
         })
       )
   }

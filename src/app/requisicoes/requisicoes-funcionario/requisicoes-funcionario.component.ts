@@ -42,8 +42,8 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       requisicao: new FormGroup({
         id: new FormControl(""),
-        dataAbertura: new FormControl(""),
         descricao: new FormControl(""),
+        dataAbertura: new FormControl(""),
 
         departamentoId: new FormControl(""),
         departamento: new FormControl(""),
@@ -52,7 +52,11 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
         equipamento: new FormControl(""),
 
         funcionarioId: new FormControl(""),
-        funcionario: new FormControl("")
+        funcionario: new FormControl(""),
+
+        status: new FormControl(""),
+        ultimaAtualizacao: new FormControl(""),
+        movimentacoes: new FormControl(""),
       })
     });
 
@@ -65,7 +69,7 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
       this.funcionarioService.selecionarFuncionarioLogado(email)
         .subscribe(funcionario => {
           this.funcionarioLogadoId = funcionario.id;
-          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesFuncionarioAtual(this.funcionarioLogadoId);
+          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesPeloFuncionarioAtual(this.funcionarioLogadoId);
         });
     })
   }
@@ -101,6 +105,7 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
   public async gravar(modal: TemplateRef<any>, requisicao?: Requisicao) {
     this.form.reset();
     this.form.get("requisicao.dataAbertura")?.setValue(new Date());
+    this.form.get("requisicao.ultimaAtualizacao")?.setValue(new Date());
     this.form.get("requisicao.equipamentoId")?.setValue(null);
     this.form.get("requisicao.funcionarioId")?.setValue(null);
 
@@ -137,7 +142,7 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
 
     } catch (error) {
       if (error != "fechar" && error != "0" && error != "1")
-        this.toastr.error('Houve um erro ao salvar o funcionário!', 'Cadastro de Requisições');
+        this.toastr.error('Houve um erro ao salvar a Requisição!', 'Cadastro de Requisições');
     }
   }
 
