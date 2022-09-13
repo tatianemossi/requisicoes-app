@@ -38,16 +38,26 @@
               <td>{{ requisicao.equipamento ? requisicao.equipamento.nome : "Não Selecionado" }}</td>
               <td class="d-grid d-md-block">
                 <button
+                  [routerLink]="['/requisicoes', requisicao.id]"
+                  type="button"
+                  class="btn btn-outline-secondary me-0 me-md-1 mb-1 mb-md-auto"
+                  title="Visualizar movimentações da requisição">
+                  <i class="pi pi-tags"></i>
+                </button>
+
+                <button
                   (click)="gravar(modal, requisicao)"
                   type="button"
-                  class="btn btn-secondary me-0 me-md-1 mb-1 mb-md-auto">
+                  class="btn btn-outline-secondary me-0 me-md-1 mb-1 mb-md-auto"
+                  title="Editar requisição">
                   <i class="pi pi-user-edit"></i>
                 </button>
 
                 <button
                   (click)="excluir(requisicao)"
                   type="button"
-                  class="btn btn-outline-danger">
+                  class="btn btn-outline-danger"
+                  title="Excluir requisição">
                   <i class="pi pi-trash"></i>
                 </button>
               </td>

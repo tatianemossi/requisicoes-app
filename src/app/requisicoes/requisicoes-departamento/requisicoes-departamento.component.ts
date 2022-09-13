@@ -18,7 +18,7 @@ import { RequisicaoService } from '../services/requisicao.service';
   selector: 'app-requisicoes-departamento',
   templateUrl: './requisicoes-departamento.component.html'
 })
-export class RequisicoesDepartamentoComponent implements OnInit, OnDestroy {
+export class RequisicoesDepartamentoComponent implements OnInit {
   public requisicoes$: Observable<Requisicao[]>;
   public equipamentos$: Observable<Equipamento[]>;
   public departamentos$: Observable<Departamento[]>;
@@ -37,10 +37,6 @@ export class RequisicoesDepartamentoComponent implements OnInit, OnDestroy {
     private funcionarioService: FuncionarioService,
     private modalService: NgbModal,
     private fb: FormBuilder) { }
-
-  ngOnDestroy(): void {
-    this.processoAutenticado$.unsubscribe();
-  }
 
   ngOnInit(): void {
     this.form = this.fb.group({
