@@ -8,6 +8,7 @@ import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { DepartamentoService } from 'src/app/departamentos/services/departamento.service';
 import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
 import { EquipamentoService } from 'src/app/equipamentos/services/equipamento.service';
+import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { FuncionarioService } from 'src/app/funcionarios/services/funcionario.service';
 import { Requisicao } from '../models/requisicao.model';
 import { RequisicaoService } from '../services/requisicao.service';
@@ -20,7 +21,7 @@ export class RequisicoesFuncionarioComponent implements OnInit {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
-  public funcionarioLogadoId: string;
+  public funcionarioLogado: Funcionario;
   public form: FormGroup;
   private processoAutenticado$: Subscription;
 
@@ -58,16 +59,14 @@ export class RequisicoesFuncionarioComponent implements OnInit {
 
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
+    this.requisicoes$ = this.requisicaoService.selecionarTodos();
 
-    this.authService.usuarioLogado.subscribe(usuario => {
+    this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(usuario => {
       const email: string = usuario?.email!;
 
       this.funcionarioService.selecionarFuncionarioLogado(email)
-        .subscribe(funcionario => {
-          this.funcionarioLogadoId = funcionario.id;
-          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesPeloFuncionarioAtual(this.funcionarioLogadoId);
-        });
-    })
+        .subscribe(funcionario => this.funcionarioLogado = funcionario);
+      })
   }
 
   get tituloModal(): string {
@@ -104,6 +103,7 @@ export class RequisicoesFuncionarioComponent implements OnInit {
     this.form.get("requisicao.ultimaAtualizacao")?.setValue(new Date());
     this.form.get("requisicao.equipamentoId")?.setValue(null);
     this.form.get("requisicao.funcionarioId")?.setValue(null);
+    this.form.get("requisicao.funcionarioId")?.setValue(this.funcionarioLogado.id);
 
     if (requisicao) {
       const departamento = requisicao.departamento ? requisicao.departamento : null;
@@ -124,7 +124,6 @@ export class RequisicoesFuncionarioComponent implements OnInit {
 
       if (this.form.dirty && this.form.valid) {
         if (!requisicao) {
-          this.form.get("requisicao.funcionarioId")?.setValue(this.funcionarioLogadoId);
           await this.requisicaoService.inserir(this.form.get("requisicao")?.value);
           this.toastr.success('Requisição inserida!', 'Cadastro de Requisições');
         }
