@@ -30,6 +30,7 @@ registerLocaleData(ptBr);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgbModule,
@@ -37,7 +38,6 @@ registerLocaleData(ptBr);
     AngularFireAuthModule,
     AngularFirestoreModule,
 
-    BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 2000,
       positionClass: 'toast-bottom-right'
