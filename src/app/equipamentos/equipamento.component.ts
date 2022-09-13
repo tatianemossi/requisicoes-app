@@ -7,18 +7,7 @@ import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
-
-export function validarData(): ValidatorFn {
-  return (input: AbstractControl): ValidationErrors | null => {
-    const dataEscolhida = moment(input.value);
-    const hoje = moment();
-
-    if (!dataEscolhida)
-      return null;
-
-    return dataEscolhida > hoje ? { invalidDate: true}: null;
-  }
-}
+import { dataFuturaValidator } from '../shared/validators/data-futura.validator';
 
 @Component({
   selector: 'app-equipamento',
@@ -44,7 +33,7 @@ export class EquipamentoComponent implements OnInit {
       numeroSerie: new FormControl("", [Validators.required, Validators.minLength(3)]),
       nome: new FormControl("", [Validators.required, Validators.minLength(3)]),
       preco: new FormControl("", [Validators.required]),
-      dataFabricacao: new FormControl("", [Validators.required, validarData()])
+      dataFabricacao: new FormControl("", [Validators.required, dataFuturaValidator()])
     })
   }
 
